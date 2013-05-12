@@ -9,39 +9,49 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
-public class BreadthFirst<Type extends State> implements Search {
+public class BreadthFirst implements Search {
 
-    private Queue<Type> queue;
-    private List<Type> visitedStates;
-    private Enviroment<Type> enviroment;
+    private Queue<State> queue;
+    private List<State> visitedStates;
+    private Enviroment enviroment;
+    private State finalState;
+    private State currentState;
 
     public BreadthFirst(Enviroment enviroment) {
         this.enviroment = enviroment;
+        this.currentState = enviroment.getInitialState();
+        this.finalState = enviroment.getFinalState();
         this.queue = new ArrayDeque<>();
         this.visitedStates = new ArrayList<>();
     }
 
     @Override
-    public Type searchFinalState() {
-        Type finalState = enviroment.getFinalState();
-        Type currentState = enviroment.getInitialState();
+    public State searchFinalState() {
         while (true) {
             if (currentState.equals(finalState)) return currentState;
             expandStatesFrom(currentState);
-            visitedStates.add(currentState);
-            currentState = queue.poll();
+            markStateAsVisited(currentState);
+            updateCurrentState();
         }
     }
 
-    private void expandStatesFrom(Type currentState) {
-        List<Action<Type>> applicableActions = enviroment.getApplicableActions(currentState);
-        for (Action<Type> applicableAction:applicableActions)
+    private void expandStatesFrom(State currentState) {
+        List<Action> applicableActions = enviroment.getApplicableActions(currentState);
+        for (Action applicableAction:applicableActions)
             if (!isVisited(applicableAction.execute(currentState))) queue.add(applicableAction.execute(currentState));
     }
 
-    private boolean isVisited(Type nextState) {
-        for (Type visitedState : visitedStates)
+    private boolean isVisited(State nextState) {
+        for (State visitedState : visitedStates)
             if (visitedState.equals(nextState)) return true;
         return false;
+    }
+
+    private void markStateAsVisited(State currentState) {
+        visitedStates.add(currentState);
+    }
+
+    private void updateCurrentState() {
+        currentState = queue.poll();
     }
 }

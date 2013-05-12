@@ -8,7 +8,7 @@ import core.ai.search.noninformed.BreadthFirst;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TwoJars implements Enviroment<TwoJarsState> {
+public class TwoJars implements Enviroment {
 
     private TwoJarsState finalState;
     private TwoJarsState currentState;
@@ -40,9 +40,9 @@ public class TwoJars implements Enviroment<TwoJarsState> {
     }
 
     @Override
-    public List<Action<TwoJarsState>> getApplicableActions(TwoJarsState state) {
-        List<Action<TwoJarsState>> applicableActions = new ArrayList<>();
-        for (Action<TwoJarsState> applicableAction : new OperatorList().getOperators())
+    public List<Action> getApplicableActions(State state) {
+        List<Action> applicableActions = new ArrayList<>();
+        for (Action applicableAction : new OperatorList().getOperators())
             if (applicableAction.isApplicable(state)) applicableActions.add(applicableAction);
         return applicableActions;
     }
