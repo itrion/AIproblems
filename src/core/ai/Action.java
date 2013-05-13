@@ -1,9 +1,9 @@
 package core.ai;
 
-public abstract class Action {
+public abstract class Action<Type extends State> {
 
-    public abstract State execute(State state);
+    public abstract Type execute(Type state);
 
-    public abstract boolean isApplicable(State state);
+    public abstract boolean isApplicable(Type state);
     
 }
