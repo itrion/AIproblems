@@ -2,9 +2,9 @@ package core.ai;
 
 import java.util.List;
 
-public interface Enviroment {
+public interface Enviroment<Type extends State> {
     public List<Action> getApplicableActions(State state);
-    public State getFinalState();
-    public State getInitialState();
+    public Type getFinalState();
+    public Type getInitialState();
     public ActionList getActionList();
 }

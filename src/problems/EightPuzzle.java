@@ -1,16 +1,19 @@
-package problems.eightpuzzle;
+package problems;
 
 import core.ai.Action;
 import core.ai.ActionList;
 import core.ai.Enviroment;
 import core.ai.Search;
 import core.ai.State;
-import core.ai.search.noninformed.BreadthFirst;
+import core.ai.search.BestFirst;
+import core.ai.search.BreadthFirst;
+import java.util.List;
+import problems.eightpuzzle.EightPuzzleState;
+import problems.eightpuzzle.EigthPuzzleGoodplacedFunction;
 import problems.eightpuzzle.operators.MoveDown;
 import problems.eightpuzzle.operators.MoveToTheLeft;
 import problems.eightpuzzle.operators.MoveToTheRight;
 import problems.eightpuzzle.operators.MoveUp;
-import java.util.List;
 
 public class EightPuzzle implements Enviroment {
 
@@ -25,7 +28,7 @@ public class EightPuzzle implements Enviroment {
     private void execute() {
         this.initialState = new EightPuzzleState(null, getInitialBoard());
         this.finalState = new EightPuzzleState(null, getFinalBoard());
-        Search search = new BreadthFirst(this);
+        Search search = new BestFirst(new EigthPuzzleGoodplacedFunction(this), this);
         State finalStateFound = search.searchFinalState();
         while (finalStateFound != null) {
             System.out.println(finalStateFound);
@@ -62,7 +65,7 @@ public class EightPuzzle implements Enviroment {
     }
 
     private int[] getInitialBoard() {
-        return new int[]{1, 4, 6, 2, 0, 7, 3, 5, 8};
+        return new int[]{1, 4, 2, 7, 5, 8, 3, 0, 6};
     }
 
     private int[] getFinalBoard() {

@@ -14,7 +14,7 @@ public class FillFourLitterJar extends Action<TwoJarsState>{
 
     @Override
     public TwoJarsState execute(TwoJarsState state) {
-        return new TwoJarsState(state.getWaterInThreeLitersJar(), 4, state);
+        return new TwoJarsState(state, state.getWaterInThreeLitersJar(), 4);
     }
 
 }

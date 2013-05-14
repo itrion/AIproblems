@@ -20,6 +20,6 @@ public class TransferFromFourLitersJarToThreeLitersJar extends Action<TwoJarsSta
             waterInFourLitersJar--;
             waterInThreeLitersJar++;
         }
-        return new TwoJarsState(waterInThreeLitersJar, waterInFourLitersJar, state);
+        return new TwoJarsState(state, waterInThreeLitersJar, waterInFourLitersJar);
     }
 }

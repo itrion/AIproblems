@@ -1,8 +1,16 @@
 package core.ai;
 
-public interface State {
+public abstract class State implements Comparable<State> {
 
-    public State getParent();
+    private State parent;
 
-    public boolean equals(State otherState);
+    public State(State parent) {
+        this.parent = parent;
+    }
+
+    public State getParent() {
+        return parent;
+    }
+
+    public abstract boolean equals(State otherState);
 }

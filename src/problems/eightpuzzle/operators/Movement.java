@@ -1,6 +1,7 @@
 package problems.eightpuzzle.operators;
 
 import core.ai.Action;
+import core.ai.State;
 import problems.eightpuzzle.EightPuzzleState;
 
 public abstract class Movement extends Action<EightPuzzleState> {
@@ -32,7 +33,7 @@ public abstract class Movement extends Action<EightPuzzleState> {
         int aux = board[targetPosition];
         board[targetPosition] = board[blankSpacePosition];
         board[blankSpacePosition] = aux;
-        return new EightPuzzleState(state, board);
+        return new EightPuzzleState((State) state, board);
     }
 
     public static class BadStateException extends RuntimeException {

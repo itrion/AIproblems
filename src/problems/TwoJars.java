@@ -1,19 +1,20 @@
-package problems.jars;
+package problems;
 
 import core.ai.Action;
 import core.ai.ActionList;
 import core.ai.Enviroment;
 import core.ai.Search;
 import core.ai.State;
-import core.ai.search.noninformed.BreadthFirst;
+import core.ai.search.BreadthFirst;
+import java.util.ArrayList;
+import java.util.List;
+import problems.jars.TwoJarsState;
 import problems.jars.operators.EmptyFourLitersJar;
 import problems.jars.operators.EmptyThreeLitersJar;
 import problems.jars.operators.FillFourLitterJar;
 import problems.jars.operators.FillThreeLitterJar;
 import problems.jars.operators.TransferFromFourLitersJarToThreeLitersJar;
 import problems.jars.operators.TransferFromThreeLitersJarToFourLitersJar;
-import java.util.ArrayList;
-import java.util.List;
 
 public class TwoJars implements Enviroment {
 
@@ -26,8 +27,8 @@ public class TwoJars implements Enviroment {
     }
 
     private void execute() {
-        finalState = new TwoJarsState(3, 2, null);
-        currentState = new TwoJarsState(0, 0, null);
+        finalState = new TwoJarsState(null, 3, 2);
+        currentState = new TwoJarsState(null, 0, 0);
         Search search = new BreadthFirst(this);
         State finalStateFound = search.searchFinalState();
         while (finalStateFound != null) {
