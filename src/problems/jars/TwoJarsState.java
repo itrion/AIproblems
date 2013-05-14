@@ -1,4 +1,4 @@
-package core.problems.jars;
+package problems.jars;
 
 import core.ai.State;
 

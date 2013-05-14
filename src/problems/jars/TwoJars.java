@@ -1,4 +1,4 @@
-package core.problems.jars;
+package problems.jars;
 
 import core.ai.Action;
 import core.ai.ActionList;
@@ -6,12 +6,12 @@ import core.ai.Enviroment;
 import core.ai.Search;
 import core.ai.State;
 import core.ai.search.noninformed.BreadthFirst;
-import core.problems.jars.operators.EmptyFourLitersJar;
-import core.problems.jars.operators.EmptyThreeLitersJar;
-import core.problems.jars.operators.FillFourLitterJar;
-import core.problems.jars.operators.FillThreeLitterJar;
-import core.problems.jars.operators.TransferFromFourLitersJarToThreeLitersJar;
-import core.problems.jars.operators.TransferFromThreeLitersJarToFourLitersJar;
+import problems.jars.operators.EmptyFourLitersJar;
+import problems.jars.operators.EmptyThreeLitersJar;
+import problems.jars.operators.FillFourLitterJar;
+import problems.jars.operators.FillThreeLitterJar;
+import problems.jars.operators.TransferFromFourLitersJarToThreeLitersJar;
+import problems.jars.operators.TransferFromThreeLitersJarToFourLitersJar;
 import java.util.ArrayList;
 import java.util.List;
 

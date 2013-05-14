@@ -1,4 +1,16 @@
 package core.ai;
-public interface Search {
-    public State searchFinalState();
+
+public abstract class Search {
+
+    private Enviroment enviroment;
+
+    public abstract State searchFinalState();
+
+    public Search(Enviroment enviroment) {
+        this.enviroment = enviroment;
+    }
+
+    public Enviroment getEnviroment() {
+        return enviroment;
+    }
 }

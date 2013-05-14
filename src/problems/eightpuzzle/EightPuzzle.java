@@ -1,4 +1,4 @@
-package core.problems.eightpuzzle;
+package problems.eightpuzzle;
 
 import core.ai.Action;
 import core.ai.ActionList;
@@ -6,10 +6,10 @@ import core.ai.Enviroment;
 import core.ai.Search;
 import core.ai.State;
 import core.ai.search.noninformed.BreadthFirst;
-import core.problems.eightpuzzle.operators.MoveDown;
-import core.problems.eightpuzzle.operators.MoveToTheLeft;
-import core.problems.eightpuzzle.operators.MoveToTheRight;
-import core.problems.eightpuzzle.operators.MoveUp;
+import problems.eightpuzzle.operators.MoveDown;
+import problems.eightpuzzle.operators.MoveToTheLeft;
+import problems.eightpuzzle.operators.MoveToTheRight;
+import problems.eightpuzzle.operators.MoveUp;
 import java.util.List;
 
 public class EightPuzzle implements Enviroment {

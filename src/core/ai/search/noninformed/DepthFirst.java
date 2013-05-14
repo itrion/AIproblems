@@ -4,24 +4,23 @@ import core.ai.Action;
 import core.ai.Enviroment;
 import core.ai.Search;
 import core.ai.State;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
+import java.util.Stack;
 
-public class BreadthFirst extends Search {
+public class DepthFirst extends Search {
 
-    private Queue<State> queue;
+    private Stack<State> stack;
     private List<State> visitedStates;
-    private State finalState;
+    private final State finalState;
     private State currentState;
 
-    public BreadthFirst(Enviroment enviroment) {
+    public DepthFirst(Enviroment enviroment) {
         super(enviroment);
+        this.stack = new Stack<>();
+        this.visitedStates = new ArrayList<>();
         this.currentState = enviroment.getInitialState();
         this.finalState = enviroment.getFinalState();
-        this.queue = new ArrayDeque<>();
-        this.visitedStates = new ArrayList<>();
     }
 
     @Override
@@ -36,8 +35,9 @@ public class BreadthFirst extends Search {
 
     private void expandStatesFrom(State currentState) {
         List<Action> applicableActions = getEnviroment().getApplicableActions(currentState);
-        for (Action applicableAction:applicableActions)
-            if (!isVisited(applicableAction.execute(currentState))) queue.add(applicableAction.execute(currentState));
+        for (Action applicableAction : applicableActions)
+            if (!isVisited(applicableAction.execute(currentState)))
+                stack.push(applicableAction.execute(currentState));
     }
 
     private boolean isVisited(State nextState) {
@@ -51,6 +51,6 @@ public class BreadthFirst extends Search {
     }
 
     private void updateCurrentState() {
-        currentState = queue.poll();
+        currentState = stack.pop();
     }
 }

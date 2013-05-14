@@ -1,7 +1,7 @@
-package core.problems.eightpuzzle.operators;
+package problems.eightpuzzle.operators;
 
 import core.ai.Action;
-import core.problems.eightpuzzle.EightPuzzleState;
+import problems.eightpuzzle.EightPuzzleState;
 
 public abstract class Movement extends Action<EightPuzzleState> {
 

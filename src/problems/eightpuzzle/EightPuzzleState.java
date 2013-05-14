@@ -1,4 +1,4 @@
-package core.problems.eightpuzzle;
+package problems.eightpuzzle;
 
 import core.ai.State;
 

@@ -1,7 +1,7 @@
-package core.problems.jars.operators;
+package problems.jars.operators;
 
 import core.ai.Action;
-import core.problems.jars.TwoJarsState;
+import problems.jars.TwoJarsState;
 
 public class TransferFromFourLitersJarToThreeLitersJar extends Action<TwoJarsState> {
 

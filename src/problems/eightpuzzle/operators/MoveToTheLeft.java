@@ -1,4 +1,4 @@
-package core.problems.eightpuzzle.operators;
+package problems.eightpuzzle.operators;
 
 public class MoveToTheLeft extends Movement {
 
