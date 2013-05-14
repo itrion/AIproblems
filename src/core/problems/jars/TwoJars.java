@@ -1,10 +1,17 @@
 package core.problems.jars;
 
 import core.ai.Action;
+import core.ai.ActionList;
 import core.ai.Enviroment;
 import core.ai.Search;
 import core.ai.State;
 import core.ai.search.noninformed.BreadthFirst;
+import core.problems.jars.operators.EmptyFourLitersJar;
+import core.problems.jars.operators.EmptyThreeLitersJar;
+import core.problems.jars.operators.FillFourLitterJar;
+import core.problems.jars.operators.FillThreeLitterJar;
+import core.problems.jars.operators.TransferFromFourLitersJarToThreeLitersJar;
+import core.problems.jars.operators.TransferFromThreeLitersJarToFourLitersJar;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +35,7 @@ public class TwoJars implements Enviroment {
             finalStateFound = finalStateFound.getParent();
         }
     }
-    
+
     @Override
     public TwoJarsState getFinalState() {
         return finalState;
@@ -42,8 +49,21 @@ public class TwoJars implements Enviroment {
     @Override
     public List<Action> getApplicableActions(State state) {
         List<Action> applicableActions = new ArrayList<>();
-        for (Action applicableAction : new OperatorList().getOperators())
-            if (applicableAction.isApplicable(state)) applicableActions.add(applicableAction);
+        for (Action applicableAction : getActionList().getActions())
+            if (applicableAction.isApplicable(state))
+                applicableActions.add(applicableAction);
         return applicableActions;
+    }
+
+    @Override
+    public ActionList getActionList() {
+        ActionList actionList = new ActionList();
+        actionList.add(new EmptyFourLitersJar());
+        actionList.add(new EmptyThreeLitersJar());
+        actionList.add(new FillFourLitterJar());
+        actionList.add(new FillThreeLitterJar());
+        actionList.add(new TransferFromFourLitersJarToThreeLitersJar());
+        actionList.add(new TransferFromThreeLitersJarToFourLitersJar());
+        return actionList;
     }
 }
