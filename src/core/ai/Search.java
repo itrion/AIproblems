@@ -19,11 +19,10 @@ public abstract class Search {
         this.finalState = enviroment.getFinalState();
         this.visitedStates = new ArrayList<>();
     }
-    
+
     protected abstract void updateCurrentState();
+
     protected abstract void updateOpenList(List<State> childs);
-    protected abstract double getOpenListSize();
-    protected abstract double getMaxOpenListSize();
 
     public Enviroment getEnviroment() {
         return enviroment;
@@ -71,14 +70,6 @@ public abstract class Search {
     public State getCurrentState() {
         return currentState;
     }
-    
-    private double getPathSize(State currentState) {
-        double sizeCounter = 1;
-        State state;
-        while ((state = currentState.getParent()) != null)
-            sizeCounter++;
-        return sizeCounter;
-    }
 
     public SearchMetrics getSearchMetrics() {
         SearchMetrics searchMetrics = new SearchMetrics();
@@ -89,5 +80,16 @@ public abstract class Search {
         searchMetrics.setSearchTime(endTime - initTime);
         return searchMetrics;
     }
-    
+
+    protected abstract double getOpenListSize();
+
+    protected abstract double getMaxOpenListSize();
+
+    private double getPathSize(State currentState) {
+        double sizeCounter = 0;
+        State nextState = currentState;
+        while ((nextState = nextState.getParent()) != null)
+            sizeCounter++;
+        return sizeCounter;
+    }
 }
