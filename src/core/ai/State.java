@@ -1,6 +1,6 @@
 package core.ai;
 
-public abstract class State implements Comparable<State> {
+public abstract class State{
 
     private State parent;
 

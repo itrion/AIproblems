@@ -29,7 +29,7 @@ public abstract class Movement extends Action<EightPuzzleState> {
     protected abstract int getMovmentPosition(int blankSpacePosition);
 
     protected EightPuzzleState moveBlankSpace(EightPuzzleState state, int blankSpacePosition, int targetPosition) {
-        int[] board = state.getBoard();
+        int[] board = state.getBoard().clone();
         int aux = board[targetPosition];
         board[targetPosition] = board[blankSpacePosition];
         board[blankSpacePosition] = aux;

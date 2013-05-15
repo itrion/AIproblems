@@ -1,23 +1,23 @@
 package core.ai.search;
 
 import core.ai.Enviroment;
-import core.ai.HeuristicFunction;
+import core.ai.Heuristic;
 import core.ai.InformedState;
 import core.ai.Search;
 import core.ai.State;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 public class BestFirst extends Search {
 
     private List<State> openList;
-    private HeuristicFunction heuristicFunction;
+    private Heuristic heuristic;
+    private double maxOpenListSize;
 
-    public BestFirst(HeuristicFunction heuristicFunction, Enviroment enviroment) {
+    public BestFirst(Heuristic heuristicFunction, Enviroment enviroment) {
         super(enviroment);
-        this.heuristicFunction = heuristicFunction;
+        this.heuristic = heuristicFunction;
         this.openList = new ArrayList<>();
     }
 
@@ -28,11 +28,24 @@ public class BestFirst extends Search {
 
     @Override
     protected void updateOpenList(List<State> childs) {
+        InformedState currentState = (InformedState) getCurrentState();
+        if (!currentState.isEvaluated()) heuristic.evaluate(currentState);
         for (Iterator<State> it = childs.iterator(); it.hasNext();) {
             InformedState childState = (InformedState) it.next();
-            childState.setEvaluationValue(heuristicFunction.evaluate(childState));
+            heuristic.evaluate(childState);
             openList.add(childState);
         }
-        Collections.sort(openList);
+        if (openList.size() > maxOpenListSize) maxOpenListSize = openList.size();
+        openList = heuristic.sort(openList);
+    }
+
+    @Override
+    protected double getOpenListSize() {
+        return openList.size();
+    }
+
+    @Override
+    protected double getMaxOpenListSize() {
+        return maxOpenListSize;
     }
 }

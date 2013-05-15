@@ -10,6 +10,8 @@ public abstract class Search {
     private Enviroment enviroment;
     private State currentState;
     private final State finalState;
+    private long initTime;
+    private long endTime;
 
     protected Search(Enviroment enviroment) {
         this.enviroment = enviroment;
@@ -17,17 +19,24 @@ public abstract class Search {
         this.finalState = enviroment.getFinalState();
         this.visitedStates = new ArrayList<>();
     }
+    
+    protected abstract void updateCurrentState();
+    protected abstract void updateOpenList(List<State> childs);
+    protected abstract double getOpenListSize();
+    protected abstract double getMaxOpenListSize();
 
     public Enviroment getEnviroment() {
         return enviroment;
     }
 
     public State searchFinalState() {
+        this.initTime = System.currentTimeMillis();
         while (!currentState.equals(finalState)) {
             updateOpenList(expandStatesFrom(currentState));
             markStateAsVisited(currentState);
             updateCurrentState();
         }
+        this.endTime = System.currentTimeMillis();
         return currentState;
     }
 
@@ -39,8 +48,8 @@ public abstract class Search {
         List<State> childs = new ArrayList<>();
         for (Iterator it = enviroment.getApplicableActions(currentState).iterator(); it.hasNext();) {
             Action applicableAction = (Action) it.next();
-            if (!stateIsVisited(getCurrentStateChild(applicableAction)))
-                childs.add(getCurrentStateChild(applicableAction));
+            if (!stateIsVisited(getStateChild(applicableAction, currentState)))
+                childs.add(getStateChild(applicableAction, currentState));
         }
         return childs;
     }
@@ -55,11 +64,30 @@ public abstract class Search {
         return false;
     }
 
-    private State getCurrentStateChild(Action applicableAction) {
+    private State getStateChild(Action applicableAction, State currentState) {
         return applicableAction.execute(currentState);
     }
 
-    protected abstract void updateCurrentState();
+    public State getCurrentState() {
+        return currentState;
+    }
+    
+    private double getPathSize(State currentState) {
+        double sizeCounter = 1;
+        State state;
+        while ((state = currentState.getParent()) != null)
+            sizeCounter++;
+        return sizeCounter;
+    }
 
-    protected abstract void updateOpenList(List<State> childs);
+    public SearchMetrics getSearchMetrics() {
+        SearchMetrics searchMetrics = new SearchMetrics();
+        searchMetrics.setOpenListSize(getOpenListSize());
+        searchMetrics.setMaxOpenListSize(getMaxOpenListSize());
+        searchMetrics.setExpandedStates(visitedStates.size());
+        searchMetrics.setPathSize(getPathSize(currentState));
+        searchMetrics.setSearchTime(endTime - initTime);
+        return searchMetrics;
+    }
+    
 }

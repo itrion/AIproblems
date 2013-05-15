@@ -3,9 +3,11 @@ package core.ai;
 public abstract class InformedState extends State {
 
     private double evaluationValue;
+    private boolean isEvaluated;
 
     public InformedState(State parent) {
         super(parent);
+        this.isEvaluated = false;
     }
 
     public double getEvaluationValue() {
@@ -14,11 +16,10 @@ public abstract class InformedState extends State {
 
     public void setEvaluationValue(double evaluationValue) {
         this.evaluationValue = evaluationValue;
+        this.isEvaluated = true;
     }
 
-    @Override
-    public int compareTo(State o) {
-        InformedState otherState = (InformedState) o;
-        return (int) (this.getEvaluationValue() - otherState.getEvaluationValue());
+    public boolean isEvaluated() {
+        return isEvaluated;
     }
 }

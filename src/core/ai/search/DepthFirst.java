@@ -9,6 +9,7 @@ import java.util.Stack;
 public class DepthFirst extends Search {
 
     private Stack<State> openList;
+    private double maxOpenListSize;
     public DepthFirst(Enviroment enviroment) {
         super(enviroment);
         this.openList = new Stack<>();
@@ -23,5 +24,16 @@ public class DepthFirst extends Search {
     protected void updateOpenList(List<State> childs) {
         for (State state : childs)
             openList.push(state);
+        if (openList.size() > maxOpenListSize) maxOpenListSize = openList.size();
+    }
+
+    @Override
+    protected double getOpenListSize() {
+        return openList.size();
+    }
+
+    @Override
+    protected double getMaxOpenListSize() {
+        return maxOpenListSize;
     }
 }

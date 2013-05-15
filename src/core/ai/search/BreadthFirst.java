@@ -10,6 +10,7 @@ import java.util.Queue;
 public class BreadthFirst extends Search {
 
     private Queue<State> openList;
+    private int maxOpenListSize;
     
     public BreadthFirst(Enviroment enviroment) {
         super(enviroment);
@@ -25,5 +26,16 @@ public class BreadthFirst extends Search {
     @Override
     protected void updateOpenList(List<State> childs) {
         openList.addAll(childs);
+        if (openList.size() > maxOpenListSize) maxOpenListSize = openList.size();
+    }
+
+    @Override
+    protected double getOpenListSize() {
+        return openList.size();
+    }
+
+    @Override
+    protected double getMaxOpenListSize() {
+        return maxOpenListSize;
     }
 }

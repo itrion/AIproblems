@@ -15,10 +15,9 @@ public class EightPuzzleState extends InformedState {
     @Override
     public boolean equals(State state) {
         EightPuzzleState otherState = (EightPuzzleState) state;
-        boolean areEquals = true;
         for (int i = 0; i < board.length; i++)
-            areEquals &= (board[i] == otherState.board[i]);
-        return areEquals;
+            if (board[i] != otherState.board[i]) return false;
+        return true;
     }
 
     public int[] getBoard() {
