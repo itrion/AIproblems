@@ -2,24 +2,45 @@ package core.ai;
 
 public abstract class InformedState extends State {
 
-    private double evaluationValue;
-    private boolean isEvaluated;
+    private double heuristicValue;
+    private double costValue;
+    private boolean evaluated;
+    private boolean costCalculated;
 
     public InformedState(State parent) {
         super(parent);
-        this.isEvaluated = false;
+        this.evaluated = false;
+        this.costCalculated = false;
+        this.costValue = 0;
     }
 
-    public double getEvaluationValue() {
-        return evaluationValue;
+    public double getHeuristicAndCostValue() {
+        return heuristicValue + costValue;
     }
 
-    public void setEvaluationValue(double evaluationValue) {
-        this.evaluationValue = evaluationValue;
-        this.isEvaluated = true;
+    public void setHeuristicValue(double evaluationValue) {
+        this.heuristicValue = evaluationValue;
+        this.evaluated = true;
+    }
+
+    public void setCostValue(double costValue) {
+        this.costValue = costValue;
+        this.costCalculated = true;
+    }
+
+    public double getHeuristicValue() {
+        return heuristicValue;
+    }
+
+    public double getCostValue() {
+        return costValue;
     }
 
     public boolean isEvaluated() {
-        return isEvaluated;
+        return evaluated;
+    }
+
+    public boolean isCostCalculated() {
+        return costCalculated;
     }
 }

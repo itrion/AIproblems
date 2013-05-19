@@ -3,10 +3,10 @@ package problems;
 import core.ai.Action;
 import core.ai.ActionList;
 import core.ai.Enviroment;
-import core.ai.Search;
 import core.ai.SearchMetrics;
 import core.ai.State;
 import core.ai.search.BestFirst;
+import core.ai.search.BestFirstWithPathCost;
 import java.util.List;
 import problems.eightpuzzle.EightPuzzleMissplacedHeuristic;
 import problems.eightpuzzle.EightPuzzleState;
@@ -28,18 +28,16 @@ public class EightPuzzle implements Enviroment {
     private void execute() {
         this.initialState = new EightPuzzleState(null, getInitialBoard());
         this.finalState = new EightPuzzleState(null, getFinalBoard());
-        Search search = new BestFirst(new EightPuzzleMissplacedHeuristic(this), this);
-        State finalStateFound = search.searchFinalState();
-        SearchMetrics metrics = search.getSearchMetrics();
-        while (finalStateFound != null) {
-            System.out.println(finalStateFound);
-            finalStateFound = finalStateFound.getParent();
-        }
-        System.out.println("pathSize: " + metrics.getPathSize());
-        System.out.println("statesExpanded: " + metrics.getStatesExpanded());
-        System.out.println("openListSize: " + metrics.getOpenListSize());
-        System.out.println("maxOpenListSize: " + metrics.getMaxOpenListSize());
-        System.out.println("searchTime: " + metrics.getSearchTime());
+
+        BestFirstWithPathCost bestFirstWithPathCost = new BestFirstWithPathCost(new EightPuzzleMissplacedHeuristic(this), this);
+        bestFirstWithPathCost.searchFinalState();
+        System.out.println("Best First With Path Cost");
+        printMetrics(bestFirstWithPathCost.getSearchMetrics());
+
+        BestFirst bestFirst = new BestFirst(new EightPuzzleMissplacedHeuristic(this), this);
+        bestFirst.searchFinalState();
+        System.out.println("Best First");
+        printMetrics(bestFirst.getSearchMetrics());
     }
 
     @Override
@@ -79,5 +77,13 @@ public class EightPuzzle implements Enviroment {
 
     private int[] getFinalBoard() {
         return new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8};
+    }
+
+    private void printMetrics(SearchMetrics metrics) {
+        System.out.println("pathSize: " + metrics.getPathSize());
+        System.out.println("statesExpanded: " + metrics.getStatesExpanded());
+        System.out.println("openListSize: " + metrics.getOpenListSize());
+        System.out.println("maxOpenListSize: " + metrics.getMaxOpenListSize());
+        System.out.println("searchTime: " + metrics.getSearchTime() + "\n\n");
     }
 }
