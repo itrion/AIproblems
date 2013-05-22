@@ -10,6 +10,7 @@ public class MiniMax {
 
     private Heuristic heuristic;
     private Enviroment enviroment;
+    private Action toExecute;
 
     public MiniMax(Heuristic heuristic, Enviroment enviroment) {
         this.heuristic = heuristic;
@@ -27,7 +28,7 @@ public class MiniMax {
             if (i == 0) miniMaxValue = childValue;
             else if (isMaxTurn(depth))
                 miniMaxValue = Math.max(miniMaxValue, childValue);
-            else miniMaxValue = Math.max(miniMaxValue, childValue);
+            else miniMaxValue = Math.min(miniMaxValue, childValue);
         }
         return miniMaxValue;
     }
