@@ -4,7 +4,7 @@ import core.ai.Action;
 import problems.jars.TwoJarsState;
 
 
-public class FillFourLitterJar extends Action<TwoJarsState>{
+public class FillFourLitterJar implements Action<TwoJarsState>{
 
     @Override
     public boolean isApplicable(TwoJarsState state) {

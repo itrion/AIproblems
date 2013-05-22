@@ -1,18 +1,14 @@
 package problems.tictactoe;
 
-import core.ai.PlayerDependentHeuristic;
+import core.ai.Heuristic;
 
-public class TicTacToeEvaluationFunction implements PlayerDependentHeuristic<TicTacToeState> {
-
+public class TicTacToeHeuristic implements Heuristic<TicTacToeState> {
     private TicTacToeState state;
-
+    
     @Override
-    public double evaluate(TicTacToeState state, boolean playerA) {
+    public double evaluate(TicTacToeState state) {
         this.state = state;
-        String symbol;
-        if (playerA) symbol = "O";
-        else symbol = "X";
-        return calcultePosibleTreeLines(symbol);
+        return calcultePosibleTreeLines(state.getTurnSymbol());
     }
 
     private double calcultePosibleTreeLines(String symbol) {
@@ -85,7 +81,7 @@ public class TicTacToeEvaluationFunction implements PlayerDependentHeuristic<Tic
     }
 
     private boolean stateAtcontainsOtherAgentSymbol(int i, String currentAgentSymbol) {
-        return state.getState()[i].equals(getOtherAgentSymbol(currentAgentSymbol));
+        return state.getBoard()[i].equals(getOtherAgentSymbol(currentAgentSymbol));
     }
 
     private String getOtherAgentSymbol(String currentAgentSymbol) {

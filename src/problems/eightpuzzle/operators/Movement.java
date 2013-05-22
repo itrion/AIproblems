@@ -4,7 +4,7 @@ import core.ai.Action;
 import core.ai.State;
 import problems.eightpuzzle.EightPuzzleState;
 
-public abstract class Movement extends Action<EightPuzzleState> {
+public abstract class Movement implements Action<EightPuzzleState>{
 
     @Override
     public EightPuzzleState execute(EightPuzzleState state) {

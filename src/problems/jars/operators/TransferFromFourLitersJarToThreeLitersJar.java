@@ -3,7 +3,7 @@ package problems.jars.operators;
 import core.ai.Action;
 import problems.jars.TwoJarsState;
 
-public class TransferFromFourLitersJarToThreeLitersJar extends Action<TwoJarsState> {
+public class TransferFromFourLitersJarToThreeLitersJar implements Action<TwoJarsState> {
 
     @Override
     public boolean isApplicable(TwoJarsState state) {
