@@ -3,8 +3,11 @@ package problems.tictactoe;
 import core.ai.Heuristic;
 
 public class TicTacToeHeuristic implements Heuristic<TicTacToeState> {
+
     private TicTacToeState state;
-    
+    private int myLines;
+    private int enemyLines;
+
     @Override
     public double evaluate(TicTacToeState state) {
         this.state = state;
@@ -21,63 +24,39 @@ public class TicTacToeHeuristic implements Heuristic<TicTacToeState> {
         counter += countThirdColumn(symbol);
         counter += firstDiagonal(symbol);
         counter += secondDiagonal(symbol);
-        return counter;
+        return myLines - enemyLines;
     }
 
     public double countFirstRow(String symbol) {
-        for (int i = 0; i < 3; i++)
-            if (boardAtcontainsOpositeAgentSymbol(i, symbol))
-                return 0;
-        return 1;
+        return countWith(0, 3, 1, symbol);
     }
 
     public double countSecondRow(String symbol) {
-        for (int i = 3; i < 6; i++)
-            if (boardAtcontainsOpositeAgentSymbol(i, symbol))
-                return 0;
-        return 1;
+        return countWith(3, 6, 1, symbol);
     }
 
     public double countThirdRow(String symbol) {
-        for (int i = 6; i < 9; i++)
-            if (boardAtcontainsOpositeAgentSymbol(i, symbol))
-                return 0;
-        return 1;
+        return countWith(6, 9, 1, symbol);
     }
 
     public double countFirstColumn(String symbol) {
-        for (int i = 0; i < 7; i += 3)
-            if (boardAtcontainsOpositeAgentSymbol(i, symbol))
-                return 0;
-        return 1;
+        return countWith(0, 7, 3, symbol);
     }
 
     public double countSecondColum(String symbol) {
-        for (int i = 1; i < 8; i += 3)
-            if (boardAtcontainsOpositeAgentSymbol(i, symbol))
-                return 0;
-        return 1;
+        return countWith(1, 8, 3, symbol);
     }
 
     public double countThirdColumn(String symbol) {
-        for (int i = 2; i < 9; i += 3)
-            if (boardAtcontainsOpositeAgentSymbol(i, symbol))
-                return 0;
-        return 1;
+        return countWith(2, 9, 3, symbol);
     }
 
     public double firstDiagonal(String symbol) {
-        for (int i = 0; i < 9; i += 4)
-            if (boardAtcontainsOpositeAgentSymbol(i, symbol))
-                return 0;
-        return 1;
+        return countWith(0, 9, 4, symbol);
     }
 
     public double secondDiagonal(String symbol) {
-        for (int i = 2; i < 9; i += 2)
-            if (boardAtcontainsOpositeAgentSymbol(i, symbol))
-                return 0;
-        return 1;
+        return countWith(2, 7, 2, symbol);
     }
 
     private boolean boardAtcontainsOpositeAgentSymbol(int i, String symbol) {
@@ -85,6 +64,29 @@ public class TicTacToeHeuristic implements Heuristic<TicTacToeState> {
     }
 
     private String getOtherAgentSymbol(String symbol) {
-        return (symbol.equals("X")) ? "O" : "X";
+        return (symbol.equals(TicTacToeState.X_SYMBOL)) ? TicTacToeState.O_SYMBOL : TicTacToeState.X_SYMBOL;
+    }
+
+    private double countWith(int min, int max, int increment, String symbol) {
+        int otherCounter = 0;
+        int myCounter = 0;
+        for (int i = min; i < max; i += increment)
+            if (boardAtcontainsOpositeAgentSymbol(i, symbol))
+                otherCounter++;
+            else if (boardAtIsFree(i)) {
+                otherCounter++;
+                myCounter++;
+            } else
+                myCounter++;
+        if (otherCounter == 3)
+            enemyLines++;
+        if (myCounter == 3)
+            myLines++;
+        return (otherCounter == 0) ? 1 : 0;
+
+    }
+
+    private boolean boardAtIsFree(int i) {
+        return (state.getBoard()[i].equals(TicTacToeState.EMPTY_SYMBOL));
     }
 }

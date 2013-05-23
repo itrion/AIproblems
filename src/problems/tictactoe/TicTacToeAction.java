@@ -25,6 +25,6 @@ public class TicTacToeAction implements Action<TicTacToeState> {
     }
 
     private String toggleTurnSymbol(String symbol) {
-        return (symbol.equals("X")) ? "O" : "X";
+        return (symbol.equals(TicTacToeState.X_SYMBOL)) ? TicTacToeState.O_SYMBOL: TicTacToeState.X_SYMBOL;
     }
 }
