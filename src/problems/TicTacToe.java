@@ -2,8 +2,8 @@ package problems;
 
 import core.ai.Action;
 import core.ai.ActionList;
-import core.ai.Enviroment;
 import core.ai.InformedState;
+import core.ai.PlayersEnviroment;
 import core.ai.search.MiniMax;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +12,7 @@ import problems.tictactoe.TicTacToeAction;
 import problems.tictactoe.TicTacToeHeuristic;
 import problems.tictactoe.TicTacToeState;
 
-public class TicTacToe implements Enviroment<TicTacToeState> {
+public class TicTacToe implements PlayersEnviroment<TicTacToeState> {
 
     private TicTacToeState currentState;
 
@@ -20,21 +20,21 @@ public class TicTacToe implements Enviroment<TicTacToeState> {
         TicTacToe ticTacToe = new TicTacToe();
         ticTacToe.execute();
     }
+    private String turnSymbol;
 
     private void execute() {
         this.currentState = getInitialState();
         TicTacToeHeuristic heuristic = new TicTacToeHeuristic();
-        MiniMax miniMaxForX = new MiniMax(heuristic, this);
-        MiniMax miniMaxForO = new MiniMax(heuristic, this);
-        System.out.println(currentState);
+        MiniMax miniMax = new MiniMax(heuristic, this);
         int i = 0;
+        System.out.println(currentState);
         while (i++ < 10) {
-            System.out.println(miniMaxForO.searchNextState((InformedState)currentState, 0, 8));
-            currentState = (TicTacToeState) miniMaxForX.getNewState();
+            turnSymbol = TicTacToeState.X_SYMBOL;
+                currentState = (TicTacToeState) miniMax.searchNextState((InformedState) currentState, 1);
             System.out.println(currentState);
             if (gameOver(currentState)) break;
-            System.out.println(miniMaxForX.searchNextState((InformedState)currentState, 0, 8));
-            currentState = (TicTacToeState) miniMaxForO.getNewState();
+            turnSymbol = TicTacToeState.O_SYMBOL;
+            currentState = (TicTacToeState) miniMax.searchNextState((InformedState) currentState, 100);
             System.out.println(currentState);
             if (gameOver(currentState)) break;
         }
@@ -60,7 +60,6 @@ public class TicTacToe implements Enviroment<TicTacToeState> {
         String[] initialBoard = new String[9];
         for (int i = 0; i < initialBoard.length; i++)
             initialBoard[i] = TicTacToeState.EMPTY_SYMBOL;
-        initialBoard[4]=TicTacToeState.X_SYMBOL;
         return new TicTacToeState(initialBoard, TicTacToeState.X_SYMBOL);
     }
 
@@ -75,5 +74,15 @@ public class TicTacToe implements Enviroment<TicTacToeState> {
 
     private boolean gameOver(TicTacToeState state) {
         return GameOverChecker.check(state);
+    }
+
+    @Override
+    public boolean isFinalState(TicTacToeState state) {
+        return gameOver(state);
+    }
+
+    @Override
+    public boolean isIsTurnOf(TicTacToeState state) {
+        return (turnSymbol.equals(state.getTurnSymbol()));
     }
 }

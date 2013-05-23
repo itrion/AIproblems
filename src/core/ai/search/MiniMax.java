@@ -1,9 +1,9 @@
 package core.ai.search;
 
 import core.ai.Action;
-import core.ai.Enviroment;
 import core.ai.Heuristic;
 import core.ai.InformedState;
+import core.ai.PlayersEnviroment;
 import core.ai.State;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,10 +11,10 @@ import java.util.List;
 public class MiniMax {
 
     private Heuristic heuristic;
-    private Enviroment enviroment;
+    private PlayersEnviroment enviroment;
     private State newState;
 
-    public MiniMax(Heuristic heuristic, Enviroment enviroment) {
+    public MiniMax(Heuristic heuristic, PlayersEnviroment enviroment) {
         this.heuristic = heuristic;
         this.enviroment = enviroment;
     }
@@ -23,31 +23,42 @@ public class MiniMax {
         return newState;
     }
 
-    public InformedState searchNextState(InformedState state, int depth, int maxDepth) {
-        if (depth == maxDepth)
-            return evaluateState(state);
-        List<InformedState> childs = getChilds(state);
-        double miniMaxValue = 0;
-        InformedState miniMaxState = null;
-        for (InformedState child : childs) {
-            miniMaxState = searchNextState(child, depth + 1, maxDepth);
-            double childValue = child.getHeuristicValue();
-            if (isMaxTurn(depth)) {
-                if (childValue > miniMaxValue) {
-                    miniMaxValue = childValue;
-                    miniMaxState = child;
-                }
-            } else if (childValue < miniMaxValue) {
-                miniMaxValue = childValue;
-                miniMaxState = child;
+    public InformedState searchNextState(InformedState state, int maxDepth) {
+        double alpha = -Double.MAX_VALUE;
+        double beta = Double.MAX_VALUE;
+        double bestEvaluation = -Double.MAX_VALUE;
+        InformedState bestMove = null;
+        for (InformedState child : getChilds(state)) {
+            if (bestMove == null)
+                bestMove = child;
+            alpha = Math.max(alpha, minimax(child, maxDepth, alpha, beta));
+            if (alpha > bestEvaluation) {
+                bestMove = child;
+                bestEvaluation = alpha;
             }
+
         }
-        return miniMaxState;
+        return bestMove;
     }
 
-    private InformedState evaluateState(InformedState state) {
-        state.setHeuristicValue(heuristic.evaluate(state));
-        return state;
+    private double minimax(InformedState state, int maxDepth, double alpha, double beta) {
+        if (maxDepth <= 0 || isTerminalState(state))
+            return heuristic.evaluate(state);
+        if (isMyTurn(state)) {
+            for (InformedState child : getChilds(state)) {
+                alpha = Math.max(alpha, minimax(child, maxDepth - 1, alpha, beta));
+                if (alpha >= beta)
+                    return beta;
+            }
+            return alpha;
+        } else {
+            for (InformedState child : getChilds(state)) {
+                beta = Math.min(beta, minimax(child, maxDepth - 1, alpha, beta));
+                if (alpha >= beta)
+                    return alpha;
+            }
+            return beta;
+        }
     }
 
     private List<InformedState> getChilds(InformedState state) {
@@ -58,7 +69,11 @@ public class MiniMax {
         return childs;
     }
 
-    private boolean isMaxTurn(int depth) {
-        return (depth % 2 == 0);
+    private boolean isTerminalState(InformedState state) {
+        return enviroment.isFinalState(state);
+    }
+
+    private boolean isMyTurn(InformedState state) {
+        return enviroment.isIsTurnOf(state);
     }
 }

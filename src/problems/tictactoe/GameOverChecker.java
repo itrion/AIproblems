@@ -14,7 +14,6 @@ public class GameOverChecker {
         if (checkFirstDiagonal(board)) return true;
         if (checkSecondDiagonal(board)) return true;
         if (checkFirstRow(board)) return true;
-        if (state.getFreeSpaces() < 2) return true;
         return false;
     }
 

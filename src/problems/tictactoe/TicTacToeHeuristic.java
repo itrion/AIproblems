@@ -11,6 +11,8 @@ public class TicTacToeHeuristic implements Heuristic<TicTacToeState> {
     @Override
     public double evaluate(TicTacToeState state) {
         this.state = state;
+        this.myLines = 0;
+        this.enemyLines = 0;
         return calcultePosibleTreeLines(getOtherAgentSymbol(state.getTurnSymbol()));
     }
 
@@ -24,7 +26,7 @@ public class TicTacToeHeuristic implements Heuristic<TicTacToeState> {
         counter += countThirdColumn(symbol);
         counter += firstDiagonal(symbol);
         counter += secondDiagonal(symbol);
-        return myLines - enemyLines;
+        return counter + myLines - enemyLines;
     }
 
     public double countFirstRow(String symbol) {
@@ -60,6 +62,7 @@ public class TicTacToeHeuristic implements Heuristic<TicTacToeState> {
     }
 
     private boolean boardAtcontainsOpositeAgentSymbol(int i, String symbol) {
+        if (boardAtIsFree(i)) return false;
         return state.getBoard()[i].equals(getOtherAgentSymbol(symbol));
     }
 
@@ -82,7 +85,7 @@ public class TicTacToeHeuristic implements Heuristic<TicTacToeState> {
             enemyLines++;
         if (myCounter == 3)
             myLines++;
-        return (otherCounter == 0) ? 1 : 0;
+        return (myCounter >= 2 && otherCounter < 1) ? Double.MAX_VALUE : 0;
 
     }
 
