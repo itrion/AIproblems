@@ -18,9 +18,9 @@ public class MiniMax {
     }
 
     public double minimax(State state, int depth, int maxDepth) {
-        double miniMaxValue = 0;
-        if (depth == maxDepth)
+        if (depth >= maxDepth)
             return heuristic.evaluate(state);
+        double miniMaxValue = 0;
         List<Action> applicableActions = enviroment.getApplicableActions(state);
         for (int i = 0; i < applicableActions.size(); i++) {
             State childState = applicableActions.get(i).execute(state);
