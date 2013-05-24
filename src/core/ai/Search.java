@@ -20,30 +20,24 @@ public abstract class Search {
         this.visitedStates = new ArrayList<>();
     }
 
-    protected abstract void updateCurrentState();
-
-    protected abstract void updateOpenList(List<State> childs);
-
-    public Enviroment getEnviroment() {
-        return enviroment;
-    }
-
     public State searchFinalState() {
-        this.initTime = System.currentTimeMillis();
+        setStartTime();
         while (!currentState.equals(finalState)) {
-            updateOpenList(expandStatesFrom(currentState));
+            updateQueueList(getChilds(currentState));
             markStateAsVisited(currentState);
             updateCurrentState();
         }
-        this.endTime = System.currentTimeMillis();
+        setFinishTime();
         return currentState;
     }
 
-    public void setCurrentState(State currentState) {
-        this.currentState = currentState;
+    private void setStartTime() {
+        this.initTime = System.currentTimeMillis();
     }
 
-    private List<State> expandStatesFrom(State currentState) {
+    protected abstract void updateQueueList(List<State> childs);
+
+    private List<State> getChilds(State currentState) {
         List<State> childs = new ArrayList<>();
         for (Iterator it = enviroment.getApplicableActions(currentState).iterator(); it.hasNext();) {
             Action applicableAction = (Action) it.next();
@@ -57,6 +51,12 @@ public abstract class Search {
         visitedStates.add(currentState);
     }
 
+    protected abstract void updateCurrentState();
+
+    private void setFinishTime() {
+        this.endTime = System.currentTimeMillis();
+    }
+
     private boolean stateIsVisited(State nextState) {
         for (State visitedState : visitedStates)
             if (visitedState.equals(nextState)) return true;
@@ -65,6 +65,14 @@ public abstract class Search {
 
     private State getStateChild(Action applicableAction, State currentState) {
         return applicableAction.execute(currentState);
+    }
+
+    public Enviroment getEnviroment() {
+        return enviroment;
+    }
+
+    public void setCurrentState(State currentState) {
+        this.currentState = currentState;
     }
 
     public State getCurrentState() {

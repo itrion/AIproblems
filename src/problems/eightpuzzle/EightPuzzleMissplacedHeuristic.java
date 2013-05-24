@@ -13,8 +13,7 @@ public class EightPuzzleMissplacedHeuristic implements Heuristic<EightPuzzleStat
 
     @Override
     public double evaluate(EightPuzzleState state) {
-        EightPuzzleState finalState = enviroment.getFinalState();
-        int[] finalBoard = finalState.getBoard();
+        int[] finalBoard = enviroment.getFinalState().getBoard();
         int missplacedCounter = 0;
         for (int i = 0; i < state.getBoard().length; i++)
             if (finalBoard[i] != state.getBoard()[i]) missplacedCounter++;

@@ -24,7 +24,7 @@ public class BreadthFirst extends Search {
 
     
     @Override
-    protected void updateOpenList(List<State> childs) {
+    protected void updateQueueList(List<State> childs) {
         openList.addAll(childs);
         if (openList.size() > maxOpenListSize) maxOpenListSize = openList.size();
     }

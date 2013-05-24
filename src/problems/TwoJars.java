@@ -26,9 +26,13 @@ public class TwoJars implements Enviroment {
         twoJars.execute();
     }
 
-    private void execute() {
+    public TwoJars() {
         finalState = new TwoJarsState(null, 3, 2);
         currentState = new TwoJarsState(null, 0, 0);
+
+    }
+
+    private void execute() {
         Search search = new BreadthFirst(this);
         State finalStateFound = search.searchFinalState();
         while (finalStateFound != null) {

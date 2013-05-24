@@ -26,7 +26,7 @@ public class EightPuzzleState extends InformedState {
 
     @Override
     public String toString() {
-        String out="";
+        String out = "";
         out += board[0] + " " + board[1] + " " + board[2] + "\n";
         out += board[3] + " " + board[4] + " " + board[5] + "\n";
         out += board[6] + " " + board[7] + " " + board[8] + "\n";

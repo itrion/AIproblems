@@ -15,34 +15,38 @@ public class BestFirstWithPathCost extends BestFirst {
     }
 
     @Override
-    protected void updateOpenList(List<State> childs) {
-        Heuristic heuristic = getHeuristic();
-        List<State> openList = getOpenList();
+    protected void updateQueueList(List<State> childs) {
         InformedState currentState = (InformedState) getCurrentState();
-        if (!currentState.isEvaluated()) evaluateCurrentState(currentState);
-        if (!currentState.isCostCalculated()) calculateCurrentStateCost(currentState);
-        for (Iterator<State> it = childs.iterator(); it.hasNext();) {
-            InformedState childState = (InformedState) it.next();
-            childState.setHeuristicValue(heuristic.evaluate(childState));
-            childState.setCostValue(getCostValueOf(childState));
-            openList.add(childState);
-        }
-        if (openList.size() > getMaxOpenListSize()) setMaxOpenListSize(openList.size());
-        Collections.sort(openList, this);
+        evaluateCostAndHeuristic(currentState);
+        addChildsToOpenList(childs);
+        updateMaxListSize();
+        sortQueue();
     }
 
-    private double getCostValueOf(InformedState state) {
-        if (state == null)
-            return 0;
-        if (state.isCostCalculated())
-            return state.getCostValue();
-        else
-            return getCostValueOf((InformedState) state.getParent()) + 1;
+    private void addChildsToOpenList(List<State> childs) {
+        for (Iterator<State> it = childs.iterator(); it.hasNext();) {
+            InformedState childState = (InformedState) it.next();
+            evaluateCostAndHeuristic(childState);
+            super.getOpenList().add(childState);
+        }
+    }
 
+    private void evaluateCostAndHeuristic(InformedState currentState) {
+        if (!currentState.isEvaluated()) super.evaluateCurrentState(currentState);
+        if (!currentState.isCostCalculated()) calculateCurrentStateCost(currentState);
+    }
+
+    private void updateMaxListSize() {
+        if (super.getOpenList().size() > getMaxOpenListSize())
+            setMaxOpenListSize(super.getOpenList().size());
+    }
+
+    private void sortQueue() {
+        Collections.sort(super.getOpenList(), this);
     }
 
     private void calculateCurrentStateCost(InformedState currentState) {
-        currentState.setCostValue(getCostValueOf(currentState));
+        currentState.setCostValue(currentState.calculateCostValue());
     }
 
     @Override
@@ -56,7 +60,7 @@ public class BestFirstWithPathCost extends BestFirst {
         double heuristicValueB = stateB.getHeuristicValue();
         if (heuristicValueA < heuristicValueB) return 1;
         if (heuristicValueA == heuristicValueB)
-            if (stateA.getCostValue() < stateB.getCostValue())
+            if (stateA.calculateCostValue() < stateB.calculateCostValue())
                 return 1;
         return -1;
     }

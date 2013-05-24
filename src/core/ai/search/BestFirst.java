@@ -29,7 +29,7 @@ public class BestFirst extends Search implements Comparator<State> {
     }
 
     @Override
-    protected void updateOpenList(List<State> childs) {
+    protected void updateQueueList(List<State> childs) {
         InformedState currentState = (InformedState) getCurrentState();
         if (!currentState.isEvaluated()) evaluateCurrentState(currentState);
         for (Iterator<State> it = childs.iterator(); it.hasNext();) {

@@ -36,6 +36,16 @@ public abstract class InformedState extends State {
         return costValue;
     }
 
+    public double calculateCostValue() {
+        return recursiveCostCalculation(this);
+    }
+
+    private double recursiveCostCalculation(InformedState state) {
+        if (state == null) return 0;
+        if (state.isCostCalculated()) return state.getCostValue();
+        else return recursiveCostCalculation((InformedState) state.getParent()) + 1;
+    }
+
     public boolean isEvaluated() {
         return evaluated;
     }

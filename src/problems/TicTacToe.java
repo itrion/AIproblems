@@ -7,52 +7,29 @@ import core.ai.PlayersEnviroment;
 import core.ai.search.MiniMax;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import javax.swing.JOptionPane;
 import problems.tictactoe.GameOverChecker;
+import problems.tictactoe.StateViewer;
 import problems.tictactoe.TicTacToeAction;
 import problems.tictactoe.TicTacToeHeuristic;
 import problems.tictactoe.TicTacToeState;
 
-public class TicTacToe implements PlayersEnviroment<TicTacToeState> {
+public class TicTacToe extends Observable implements PlayersEnviroment<TicTacToeState> {
 
+    private String turnSymbol;
     private TicTacToeState currentState;
+    private final StateViewer stateViewer;
 
     public static void main(String[] args) {
         TicTacToe ticTacToe = new TicTacToe();
         ticTacToe.execute();
     }
-    private String turnSymbol;
 
-    private void execute() {
+    public TicTacToe() {
         this.currentState = getInitialState();
-        TicTacToeHeuristic heuristic = new TicTacToeHeuristic();
-        MiniMax miniMax = new MiniMax(heuristic, this);
-        int i = 0;
-        System.out.println(currentState);
-        while (i++ < 10) {
-            turnSymbol = TicTacToeState.X_SYMBOL;
-                currentState = (TicTacToeState) miniMax.searchNextState((InformedState) currentState, 1);
-            System.out.println(currentState);
-            if (gameOver(currentState)) break;
-            turnSymbol = TicTacToeState.O_SYMBOL;
-            currentState = (TicTacToeState) miniMax.searchNextState((InformedState) currentState, 100);
-            System.out.println(currentState);
-            if (gameOver(currentState)) break;
-        }
-    }
-
-    @Override
-    public List<Action> getApplicableActions(TicTacToeState state) {
-        List<Action> applicableActions = new ArrayList<>();
-        String[] currentBoard = state.getBoard();
-        for (int i = 0; i < currentBoard.length; i++)
-            if (isEmpty(currentBoard[i]))
-                applicableActions.add(new TicTacToeAction(i, state.getTurnSymbol()));
-        return applicableActions;
-    }
-
-    @Override
-    public TicTacToeState getFinalState() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        stateViewer = new StateViewer(currentState);
+        addObserver(stateViewer);
     }
 
     @Override
@@ -63,26 +40,85 @@ public class TicTacToe implements PlayersEnviroment<TicTacToeState> {
         return new TicTacToeState(initialBoard, TicTacToeState.X_SYMBOL);
     }
 
-    @Override
-    public ActionList getActionList() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    private void execute() {
+        TicTacToeHeuristic heuristic = new TicTacToeHeuristic();
+        MiniMax miniMax = new MiniMax(heuristic, this);
+        play(miniMax);
     }
 
-    private boolean isEmpty(String cell) {
-        return (cell.equals(TicTacToeState.EMPTY_SYMBOL));
+    private void play(MiniMax miniMax) {
+        turnSymbol = TicTacToeState.X_SYMBOL;
+        while (true) {
+            waitNextOrder();
+            updateCurrentState(miniMax, 1);
+            toggelTurn();
+            if (isFinalState(currentState)) break;
+            waitNextOrder();
+            updateCurrentState(miniMax, 5);
+            toggelTurn();
+            if (isFinalState(currentState)) break;
+        }
+        waitNextOrder();
+        stateViewer.setVisible(false);
+        stateViewer.dispose();
+        System.exit(0);
     }
 
-    private boolean gameOver(TicTacToeState state) {
-        return GameOverChecker.check(state);
+    private void updateCurrentState(MiniMax miniMax, int maxDepth) {
+        currentState = playTurn(miniMax, maxDepth);
+        setChanged();
+        notifyObservers(currentState);
+    }
+
+    private void toggelTurn() {
+        turnSymbol = (isXTurn()) ? TicTacToeState.O_SYMBOL : TicTacToeState.X_SYMBOL;
+    }
+
+    private TicTacToeState playTurn(MiniMax miniMax, int maxDepth) {
+        return (TicTacToeState) miniMax.searchNextState((InformedState) currentState, maxDepth);
     }
 
     @Override
     public boolean isFinalState(TicTacToeState state) {
-        return gameOver(state);
+        return GameOverChecker.check(state);
+    }
+
+    private boolean isXTurn() {
+        return turnSymbol.equals(TicTacToeState.X_SYMBOL);
+    }
+
+    @Override
+    public List<Action> getApplicableActions(TicTacToeState state) {
+        return getApplicableActions(new ArrayList<Action>(), state.getBoard(), state.getTurnSymbol());
+    }
+
+    private List<Action> getApplicableActions(List<Action> applicableActions, String[] currentBoard, String turnSymbol) {
+        for (int i = 0; i < currentBoard.length; i++)
+            if (isEmptyCell(currentBoard[i]))
+                applicableActions.add(new TicTacToeAction(i, turnSymbol));
+        return applicableActions;
+    }
+
+    private boolean isEmptyCell(String cell) {
+        return (cell.equals(TicTacToeState.EMPTY_SYMBOL));
     }
 
     @Override
     public boolean isIsTurnOf(TicTacToeState state) {
         return (turnSymbol.equals(state.getTurnSymbol()));
+    }
+
+    @Override
+    public ActionList getActionList() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public TicTacToeState getFinalState() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    private void waitNextOrder() {
+        JOptionPane.showMessageDialog(null, "clic to next step", "Hi", JOptionPane.PLAIN_MESSAGE);
     }
 }
