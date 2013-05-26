@@ -4,7 +4,7 @@ import core.ai.Action;
 import core.ai.ActionList;
 import core.ai.InformedState;
 import core.ai.PlayersEnviroment;
-import core.ai.search.MiniMax;
+import core.ai.searches.MiniMax;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -104,7 +104,7 @@ public class TicTacToe extends Observable implements PlayersEnviroment<TicTacToe
     }
 
     @Override
-    public boolean isIsTurnOf(TicTacToeState state) {
+    public boolean isTurnOf(TicTacToeState state) {
         return (turnSymbol.equals(state.getTurnSymbol()));
     }
 

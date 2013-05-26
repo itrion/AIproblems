@@ -5,7 +5,7 @@ import core.ai.ActionList;
 import core.ai.Enviroment;
 import core.ai.Search;
 import core.ai.State;
-import core.ai.search.BreadthFirst;
+import core.ai.searches.BreadthFirst;
 import java.util.ArrayList;
 import java.util.List;
 import problems.jars.TwoJarsState;
